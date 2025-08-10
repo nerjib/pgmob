@@ -8,6 +8,8 @@ import api from '@/services/api';
 interface Agent {
   id: string;
   name: string;
+  email: string;
+  phone: string;
   region: string;
   devicesManaged: number;
   totalSales: string | null;

@@ -1,32 +1,31 @@
 
-import { useLogout } from '@/hooks/useLogout';
 import { Tabs } from 'expo-router';
-import { LogOut } from 'lucide-react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
+
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof FontAwesome>['name'];
+  color: string;
+}) {
+  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+}
 
 export default function SuperAgentLayout() {
-  const logout = useLogout();
+  const colorScheme = useColorScheme();
 
   return (
-    <Tabs>
-      <Tabs.Screen name="home" options={{ title: 'Dashboard' }} />
-      <Tabs.Screen name="agents" options={{ title: 'Agents' }} />
-      <Tabs.Screen name="customers" options={{ title: 'Customers' }} />
-      <Tabs.Screen name="payments" options={{ title: 'Payments' }} />
-      <Tabs.Screen name="devices" options={{ title: 'Devices' }} />
-      <Tabs.Screen name="commissions" options={{ title: 'Commissions' }} />
-      <Tabs.Screen 
-        name="logout" 
-        options={{
-          title: 'Logout',
-          tabBarIcon: ({ color, size }) => <LogOut color={color} size={size} />,
-        }}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            logout();
-          },
-        }}
-      />
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: 'dark',
+      }}
+    >
+      <Tabs.Screen name="home" options={{ title: 'Dashboard', tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} /> }} />
+      <Tabs.Screen name="agents" options={{ title: 'Agents', tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} /> }} />
+      <Tabs.Screen name="customers" options={{ title: 'Customers', tabBarIcon: ({ color }) => <TabBarIcon name="group" color={color} /> }} />
+      <Tabs.Screen name="payments" options={{ title: 'Payments', tabBarIcon: ({ color }) => <TabBarIcon name="money" color={color} /> }} />
+      <Tabs.Screen name="devices" options={{ title: 'Devices', tabBarIcon: ({ color }) => <TabBarIcon name="mobile" color={color} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} /> }} />
     </Tabs>
   );
 }
