@@ -12,6 +12,7 @@ export default function SuperAgentLayout() {
       <Tabs.Screen name="agents" options={{ title: 'Agents' }} />
       <Tabs.Screen name="customers" options={{ title: 'Customers' }} />
       <Tabs.Screen name="payments" options={{ title: 'Payments' }} />
+      <Tabs.Screen name="devices" options={{ title: 'Devices' }} />
       <Tabs.Screen name="commissions" options={{ title: 'Commissions' }} />
       <Tabs.Screen 
         name="logout" 
