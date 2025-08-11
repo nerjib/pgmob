@@ -1,8 +1,9 @@
 
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import { Pressable } from 'react-native';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -13,14 +14,34 @@ function TabBarIcon(props: {
 
 export default function SuperAgentLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'dark',
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       }}
     >
-      <Tabs.Screen name="home" options={{ title: 'Dashboard', tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} /> }} />
+      <Tabs.Screen 
+        name="home" 
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          headerShown: true, // Show header for this specific tab
+          headerRight: () => (
+            <Pressable onPress={() => router.push('/super-agent-nested/messages')}>
+              {({ pressed }) => (
+                <FontAwesome
+                  name="bell" // Notification icon
+                  size={25}
+                  color={Colors[colorScheme ?? 'light'].text} // Use appropriate color
+                  style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                />
+              )}
+            </Pressable>
+          ),
+        }}
+      />
       <Tabs.Screen name="agents" options={{ title: 'Agents', tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} /> }} />
       <Tabs.Screen name="customers" options={{ title: 'Customers', tabBarIcon: ({ color }) => <TabBarIcon name="group" color={color} /> }} />
       <Tabs.Screen name="payments" options={{ title: 'Payments', tabBarIcon: ({ color }) => <TabBarIcon name="money" color={color} /> }} />
