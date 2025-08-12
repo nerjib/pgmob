@@ -64,6 +64,67 @@ interface Activity {
   status: string;
 }
 
+import { useAuth } from '@/hooks/useAuth'; // Import useAuth
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  county: string;
+  idNumber: string | null;
+  joinDate: string;
+  status: 'active' | 'inactive' | null;
+  creditScore: number | null;
+  totalLoans: string;
+  activeLoans: string;
+  completedLoans: string;
+  totalBorrowed: string;
+  totalPaid: string;
+  outstandingBalance: string;
+  devices: any; // This can be further typed if needed
+  lastPayment: string | null;
+  nextPaymentDue: string | null;
+  loans: Loan[];
+  paymentHistory: Payment[];
+  recentActivities: Activity[];
+}
+
+interface Loan {
+  id: string;
+  deviceType: string;
+  deviceId: string;
+  principalAmount: number;
+  totalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+  paymentAmountPerCycle: number;
+  startDate: string;
+  endDate: string | null;
+  status: string;
+  nextPaymentDate: string;
+  progress: number;
+}
+
+interface Payment {
+  id: string;
+  date: string;
+  amount: number;
+  method: string;
+  reference: string | null;
+  status: string;
+  loanId: string;
+}
+
+interface Activity {
+  id: string;
+  type: string;
+  message: string;
+  timestamp: string;
+  status: string;
+}
+
 export default function CustomerDetailsScreen() {
   const { id } = useLocalSearchParams();
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -72,10 +133,16 @@ export default function CustomerDetailsScreen() {
   const [showFabOptions, setShowFabOptions] = useState(false);
 
   const router = useRouter();
+  const { userRole } = useAuth(); // Get userRole
 
   const handleAssignDevice = () => {
     if (customer) {
-      router.push({ pathname: '/create-loan', params: { customerId: customer.id } });
+      if (userRole === 'agent') {
+        router.push({ pathname: '/assign-device-to-customer', params: { customerId: customer.id } });
+      } else {
+        // For super-agent or admin, they might create a loan directly
+        router.push({ pathname: '/create-loan', params: { customerId: customer.id } });
+      }
     } else {
       Alert.alert('Error', 'Customer data not loaded yet.');
     }
